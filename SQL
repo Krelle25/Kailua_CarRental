@@ -1,0 +1,123 @@
+#CREATE SCHEMA Kailua_CarRental;
+
+CREATE TABLE CarType (
+CarType_id int not null AUTO_INCREMENT,
+Name varchar (50) not null,
+Description TEXT,
+PRIMARY KEY (CarType_id)
+);
+
+CREATE TABLE FuelType (
+FuelType_id int not null AUTO_INCREMENT,
+FuelTypeName varchar(50) not null,
+PRIMARY KEY (FuelType_id)
+);
+
+CREATE TABLE Address (
+Address_id int not null AUTO_INCREMENT,
+Street varchar (50) not null,
+Zip varchar (10) not null,
+City varchar (100) not null,
+PRIMARY KEY (Address_id)
+);
+
+CREATE TABLE Customer (
+Customer_id int not null AUTO_INCREMENT,
+Name varchar (50) not null, 
+Address_id int not null,
+PhoneNumber varchar (20) not null,
+Email varchar (50) not null,
+DriverLicenseNumber varchar (40) not null,
+DriverSinceDate date not null,
+PRIMARY KEY (Customer_id),
+FOREIGN KEY (Address_id) references Address (Address_id),
+UNIQUE (DriverLicenseNumber)
+);
+
+CREATE TABLE Car (
+Car_id int not null AUTO_INCREMENT,
+Brand varchar (30) not null,
+Model varchar (20) not null,
+FuelType_id int not null,
+Plate varchar (10) not null unique,
+FRegistration date not null,
+Odometer int not null,
+CarType_id int not null,
+PRIMARY KEY (Car_id),
+FOREIGN KEY (FuelType_id) references FuelType (FuelType_id),
+FOREIGN KEY (CarType_id) references CarType (CarType_id)
+);
+
+CREATE TABLE RentalContract (
+Rental_id int not null AUTO_INCREMENT,
+Customer_id int not null,
+Car_id int not null,
+StartDate DATETIME not null,
+EndDate DATETIME not null,
+MaxKM int not null,
+KMStart int not null,
+Status ENUM ('Active', 'Completed', 'Cancelled') not null default 'Active',
+PRIMARY KEY (Rental_id),
+FOREIGN KEY (Customer_id) references Customer (Customer_id),
+FOREIGN KEY (Car_id) references Car (Car_id)
+);
+
+INSERT INTO CarType (Name, Description) VALUES
+('Luxury', 'High-end cars with leather seats, cruise control, and automatic gear'),
+('Family', 'Spacious cars with manual gear, some with cruise control, 7 seats or more'),
+('Sport', 'High-performance cars with manual gear and over 200hp');
+
+INSERT INTO FuelType (FuelTypeName) VALUES
+('Diesel'),
+('Gas'),
+('Petrol'),
+('Electric'),
+('Hybrid');
+
+INSERT INTO Address (Street, Zip, City) VALUES
+('Ishøj Bygade 31', '2635', 'Ishøj'),
+('Main Street 12', '1000', 'Copenhagen'),
+('Baker Street 221B', '2000', 'Frederiksberg'),
+('Elm Street 55', '1500', 'Aarhus'),
+('Nørregade 4', '8000', 'Aarhus'),
+('Hovedgaden 23', '4000', 'Roskilde'),
+('Sønder Alle 9', '6000', 'Kolding'),
+('Vestergade 10', '5000', 'Odense'),
+('Østervold 14', '7800', 'Skive'),
+('Englandsvej 112', '2300', 'København S');
+
+INSERT INTO Customer (Name, Address_id, PhoneNumber, Email, DriverLicenseNumber, DriverSinceDate) VALUES
+('Kristian Steffensen', 1, '29105560', 'kmeyersteffensen@gmail.com', 'DK12345678', '2021-11-22'),
+('Jens Hansen', 2, '87654321', 'jens@email.com', 'DK23456789', '2010-05-15'),
+('Maria Sørensen', 3, '98765432', 'maria@email.com', 'DK87654321', '2015-07-20'),
+('Lars Petersen', 4, '56789012', 'lars@email.com', 'DK56789012', '2008-09-10'),
+('Thomas Jensen', 5, '12345678', 'thomas@email.com', 'DK34567890', '2012-05-14'),
+('Anne Mikkelsen', 6, '43218765', 'anne@email.com', 'DK45678901', '2017-08-23'),
+('Peter Holm', 7, '87651234', 'peter@email.com', 'DK56789312', '2005-12-30'),
+('Nina Rasmussen', 8, '78541236', 'nina@email.com', 'DK67890123', '2011-03-21'),
+('Michael Knudsen', 9, '65478912', 'michael@email.com', 'DK78901234', '2014-06-11'),
+('Sarah Olsen', 10, '32147856', 'sarah@email.com', 'DK89012345', '2019-09-25');
+
+INSERT INTO Car (Brand, Model, FuelType_id, Plate, FRegistration, Odometer, CarType_id) VALUES
+('Porsche', '911 GTS 3 RS', 3, 'AB12345', '2020-10-11', 1000, 3),
+('Rolls Royce', 'Phantom', 3, 'DF99031', '2023-01-01', 950, 1),
+('Kia', 'Carnival Hybrid', 5, 'DP54301', '2019-04-20', 40000, 2),
+('Tesla', 'Roadster', 4, 'DF86303', '2025-01-01', 10, 3),
+('Mercedes', 'S-Class', 1, 'MB12345', '2022-05-10', 15000, 1),
+('Bentley', 'Continental GT', 3, 'BT56789', '2021-06-22', 12000, 1),
+('Lamborghini', 'Huracán', 3, 'LB99887', '2023-07-15', 8000, 1),
+('Ferrari', 'F8 Tributo', 3, 'FR87654', '2020-08-30', 5000, 1),
+('Maserati', 'Quattroporte', 3, 'MS54321', '2019-09-25', 18000, 1),
+('Aston Martin', 'DB11', 3, 'AM24680', '2024-01-05', 2000, 1);
+
+INSERT INTO RentalContract (Customer_id, Car_id, StartDate, EndDATE, MaxKM, KMStart, Status) VALUES
+(1, 1, '2024-01-01 10:00:00', '2024-02-01 10:00:00', 1000, 3, 'Completed'),
+(2, 4, '2024-03-10 09:30:00', '2024-09-10 13:00:00', 7000, 10, 'Cancelled'),
+(3, 2, '2024-07-10 09:30:00', '2025-07-10 10:00:00', 25000, 950, 'Active'),
+(4, 3, '2023-01-01 08:00:00', '2023-12-01 09:00:00', 20000, 40000, 'Completed'),
+(5, 5, '2024-06-15 10:00:00', '2024-07-15 12:00:00', 5000, 10000, 'Active'),
+(6, 6, '2024-08-01 09:00:00', '2024-08-31 15:00:00', 4000, 9000, 'Cancelled'),
+(7, 7, '2024-09-12 08:30:00', '2024-10-12 14:30:00', 7000, 15000, 'Active'),
+(8, 8, '2024-10-05 12:00:00', '2024-11-05 16:00:00', 6000, 12000, 'Completed'),
+(9, 9, '2025-02-01 10:00:00', '2025-03-01 11:00:00', 8000, 20000, 'Active'),
+(10, 10, '2025-04-10 11:30:00', '2025-05-10 14:00:00', 10000, 25000, 'Completed');
