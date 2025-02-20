@@ -57,7 +57,7 @@ public class Main
     {
         System.out.println("\n============================");
         System.out.println("\uD83D\uDE97 --- KAILUA CAR RENTAL --- \uD83D\uDE97");
-        System.out.println("\n============================");
+        System.out.println("============================");
         System.out.println("1. \uD83C\uDD95 Tilføj en bil");
         System.out.println("2. \uD83C\uDD95 Tilføj en kunde");
         System.out.println("3. \uD83C\uDD95 Tilføj en lejekontakt");
