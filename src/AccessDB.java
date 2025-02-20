@@ -12,8 +12,8 @@ public class AccessDB
                     ResultSet resultSet = statement.executeQuery("SELECT * FROM Car");
 
                     while (resultSet.next()) {
-                        int car_id = resultSet.getInt("Car_id");
-                        System.out.println("Car ID:" + car_id);
+                        String model = resultSet.getString("Model");
+                        System.out.println("Model:" + model);
                     }
                     connection.close();
                 }
